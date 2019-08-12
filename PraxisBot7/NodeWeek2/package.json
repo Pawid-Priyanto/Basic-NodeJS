@@ -1,0 +1,21 @@
+{
+  "name": "nodeweek2",
+  "version": "1.0.0",
+  "description": "database mongodb",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "pawid",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
+    "mongoose": "^5.6.9"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.1",
+    "nodemon": "^1.19.1"
+  }
+}
