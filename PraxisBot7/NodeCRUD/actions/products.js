@@ -1,5 +1,5 @@
-const Product = require("../models/product")
-const User = require("../models/user")
+const Product = require("../models/productModel")
+const User = require("../models/userModel")
 
 const create = async (req) => {
     let { merk, type, price, author } = req.body

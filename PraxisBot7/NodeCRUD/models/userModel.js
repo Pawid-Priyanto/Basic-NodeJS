@@ -7,8 +7,10 @@ const Schema = mongoose.Schema
 
 let userSchema = new Schema({
     name: String,
+    email: String,
     address: String,
     phone: Number,
+    password: String,
     created_at: {
         type: Date,
         default: Date.now

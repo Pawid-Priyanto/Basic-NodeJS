@@ -1,15 +1,38 @@
 const express = require('express')
 const router = express.Router()
-const { create, getAll, getDetail, update, destroy } = require("../actions/users")
+const Shop = require("../actions/shopAction")
+const ShowShop = require("../actions/shops/showAction")
+// const CreateShop = require("../actions/shops/createshop")
+const UpdateShop = require("../actions/shops/updateshop")
+const DeleteShop = require("../actions/shops/deleteshop")
+// const all = require("../actions/shops/getall")
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
     try {
-        let data = await create(req)
+        let data = await Shop.create(req)
+
+        return res.status(201).json({
+            status: "success",
+            data,
+            message: "Shop created successfully"
+        })
+    } catch(err) {
+        console.log(err)
+        return res.status(400).json({
+            status: "error",
+            message: err.message
+        })
+    }
+})
+
+router.get("/", async (req, res, next) => {
+    try {
+        let data = await Shop.all()
 
         return res.status(200).json({
             status: "success",
             data,
-            message: "User created successfully!"
+            message: "Get all shop data"
         })
     } catch(err) {
         return res.status(400).json({
@@ -19,32 +42,16 @@ router.post("/", async (req, res) => {
     }
 })
 
-router.get("/", async (req, res) => {
-    try {
-        let data = await getAll()
-
-        return res.send({
-            status: "success",
-            data,
-            message: "Get all user data"
-        })
-    } catch(err) {
-        return res.status(400).json({
-            status: "error",
-            message: err.message
-        })
-    }
-})
-
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
     try {
         let { id } = req.params
-        let data = await getDetail(id)
+        let data = await new ShowShop(id).exec()
+        console.log(`Type of ShowShop is ${typeof ShowShop}`)
 
         return res.status(200).json({
             status: "success",
             data,
-            message: "Get user detail successfully!"
+            message: "Get detail of shop"
         })
     } catch(err) {
         return res.status(400).json({
@@ -53,24 +60,15 @@ router.get("/:id", async (req, res) => {
         })
     }
 })
-
 router.put("/:id", async (req, res) => {
-    let { id } = req.params
-    let updated_data = {
-        name: req.body.name,
-        email: req.body.email,
-        address: req.body.address,
-        phone: req.body.phone,
-        fresh: req.body.fresh
-    }
-
     try {
-        let data = await update(id, updated_data)
+        let {id} = req.params
+        let data = await new UpdateShop(id,req).update()
 
         return res.status(200).json({
             status: "success",
             data,
-            message: "User data updated successfully!"
+            message: "Shop created successfully"
         })
     } catch(err) {
         return res.status(400).json({
@@ -79,17 +77,15 @@ router.put("/:id", async (req, res) => {
         })
     }
 })
-
-router.delete("/:id", async (req, res) => {
-    let { id } = req.params
-
+router.delete("/:id", async (req, res, next) => {
     try {
-        let data = await destroy(id)
+        let { id } = req.params
+        let data = await new DeleteShop(id,req).delete()
 
-        return res.status(200).json({
+        return res.status(201).json({
             status: "success",
             data,
-            message: "User data deleted successfully!"
+            message: "Shop data deleted successfully!"
         })
     } catch(err) {
         return res.status(400).json({

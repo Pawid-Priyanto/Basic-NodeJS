@@ -1,12 +1,14 @@
-const User = require("../models/user")
+const User = require("../models/userModel")
 
 const create = async (req) => {
-    let { name, address, phone } = req.body
+    let { name, address, phone, email, password } = req.body
     phone = parseInt(phone)
     var insert_data = {
         name,
+        email,
         address,
-        phone
+        phone,
+        password
     }
 
     let data = new User(insert_data)
