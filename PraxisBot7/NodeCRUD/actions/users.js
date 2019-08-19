@@ -1,14 +1,12 @@
 const User = require("../models/userModel")
 
 const create = async (req) => {
-    let { name, address, phone, email, password } = req.body
+    let { name, email, phone } = req.body
     phone = parseInt(phone)
     var insert_data = {
         name,
         email,
-        address,
-        phone,
-        password
+        phone
     }
 
     let data = new User(insert_data)
@@ -28,7 +26,7 @@ const getAll = async () => {
         let data = query.map((v, i) => {
             return {
                 name: v.name,
-                address: v.address,
+                email: v.email,
                 phone: v.phone
             }
         })
@@ -41,28 +39,24 @@ const getAll = async () => {
 
 const getDetail = async (id) => {
     try {
-        let query = await User.find({_id: id}).exec()
-        let data = query.map((v, i) => {
-            return {
-                name: v.name,
-                address: v.address,
-                phone: v.phone
-            }
-        })
-        return data
+        let query = await User.findOne({
+            _id: id
+        }).exec()
+
+        return query
     } catch(err) {
         throw err
     }
 }
 
 const update = async (id, updated_data) => {
-    let { name, address, phone, fresh } = updated_data
+    let { name, email, phone, fresh } = updated_data
     let opts = {
         new: fresh === "true" ? true : false
     }
     let data = {
         name,
-        address,
+        email,
         phone
     }
 

@@ -2,35 +2,32 @@ const User = require("../../models/userModel")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
-class Register {
+class Login {
     constructor(req) {
-        this.name = req.body.name,
         this.email = req.body.email,
-        this.phone = req.body.phone,
         this.password = req.body.password
     }
 
     async exec() {
         try {
-            let password = bcrypt.hashSync(this.password, 8) // params: password, salt
-            console.log(`Hashing password ${password}`)
-            let insert_data = {
-                name: this.name,
+            let data = await User.find({
                 email: this.email,
-                phone: this.phone,
-                address: this.address,
-                password
+            }).exec()
+
+            if(data.length == 0) {
+                throw Error("User not found")
             }
 
-            let query = new User(insert_data)
-            await query.save()
+            let password = await bcrypt.compare(this.password, data[0].password)
+            if(!password) {
+                throw Error("Unauthenticated")
+            }
 
             let payload = {
-                user_id: query._id,
-                user_name: query.name,
-                user_email: query.email,
-                user_phone: query.phone,
-                
+                user_id: data[0]._id,
+                user_name: data[0].name,
+                user_email: data[0].email,
+                user_phone: data[0].phone
             }
             let token = jwt.sign(payload, process.env.JWT_SECRET, {
                 expiresIn: 86400 // expires in 24 hours
@@ -47,4 +44,4 @@ class Register {
     }
 }
 
-module.exports = Register
+module.exports = Login
